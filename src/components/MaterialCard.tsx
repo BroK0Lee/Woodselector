@@ -7,6 +7,9 @@ interface MaterialCardProps {
   isSelected: boolean;
 }
 
+const MaterialCard: React.FC<MaterialCardProps> = ({ name, image, onSelect, isSelected }) => {
+  const handleClick = () => {
+    onSelect();
   };
 
   return (
@@ -19,6 +22,8 @@ interface MaterialCardProps {
           ? 'bg-amber-50 border-amber-300 shadow-amber-200/50' 
           : 'bg-white border-gray-200 hover:border-amber-200'
         }
+      `}
+      onClick={handleClick}
     >
       <div className="w-full h-24 overflow-hidden rounded-t-lg">
         <img 
