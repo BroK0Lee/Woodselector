@@ -84,7 +84,18 @@ const WoodMaterialSelector: React.FC = () => {
       const element = document.createElement('div');
       element.style.width = '128px';
       element.style.height = '160px';
+      element.style.pointerEvents = 'auto';
+      element.style.cursor = 'pointer';
       element.id = `material-${material.id}`;
+      
+      // Add click handler directly to the DOM element
+      element.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('Clicked on material:', material.name);
+        setModalMaterial(material);
+        setIsModalOpen(true);
+      });
 
       // Create CSS3D object
       const objectCSS = new CSS3DObject(element);

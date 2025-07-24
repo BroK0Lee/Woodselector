@@ -8,6 +8,13 @@ interface MaterialCardProps {
 }
 
 const MaterialCard: React.FC<MaterialCardProps> = ({ name, image, onSelect, isSelected }) => {
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log('MaterialCard clicked:', name);
+    onSelect();
+  };
+
   return (
     <div 
       className={`
@@ -23,8 +30,11 @@ const MaterialCard: React.FC<MaterialCardProps> = ({ name, image, onSelect, isSe
     >
       <div className="w-full h-24 overflow-hidden rounded-t-lg">
         <img 
-          src={image} 
-      style={{ pointerEvents: 'auto' }}
+      onClick={handleClick}
+      style={{ 
+        pointerEvents: 'auto',
+        cursor: 'pointer',
+        userSelect: 'none'
           alt={name}
           className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
           style={{ pointerEvents: 'none' }}
