@@ -4,6 +4,7 @@ import * as THREE from 'three';
 import { CSS3DRenderer, CSS3DObject } from 'three/examples/jsm/renderers/CSS3DRenderer.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import MaterialCard from './MaterialCard';
+import MaterialModal from './MaterialModal';
 
 interface Material {
   name: string;
@@ -34,7 +35,10 @@ const WoodMaterialSelector: React.FC = () => {
   const controlsRef = useRef<OrbitControls>();
   const objectsRef = useRef<CSS3DObject[]>([]);
   const [selectedMaterial, setSelectedMaterial] = useState<string | null>(null);
+  const [modalMaterial, setModalMaterial] = useState<Material | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAnimating, setIsAnimating] = useState(true);
+  const [confirmedMaterial, setConfirmedMaterial] = useState<Material | null>(null);
 
   useEffect(() => {
     if (!mountRef.current) return;
@@ -193,8 +197,19 @@ const WoodMaterialSelector: React.FC = () => {
   };
 
   const handleMaterialSelect = (material: Material) => {
+    setModalMaterial(material);
+    setIsModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+    setModalMaterial(null);
+  };
+
+  const handleMaterialConfirm = (material: Material) => {
+    setConfirmedMaterial(material);
     setSelectedMaterial(material.id);
-    console.log('Selected material:', material.name);
+    console.log('Confirmed material:', material.name);
   };
 
   return (
@@ -237,11 +252,19 @@ const WoodMaterialSelector: React.FC = () => {
           </p>
           {selectedMaterial && (
             <p className="text-sm font-medium text-amber-700 mt-2">
-              Sélectionné: {materials.find(m => m.id === selectedMaterial)?.name}
+              Matériau confirmé: {confirmedMaterial?.name}
             </p>
           )}
         </div>
       </div>
+
+      {/* Modal */}
+      <MaterialModal
+        material={modalMaterial}
+        isOpen={isModalOpen}
+        onClose={handleModalClose}
+        onConfirm={handleMaterialConfirm}
+      />
 
       {/* Instructions */}
       <div className="absolute bottom-6 right-6 z-10">
