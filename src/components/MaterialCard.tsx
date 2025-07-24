@@ -24,8 +24,10 @@ const MaterialCard: React.FC<MaterialCardProps> = ({ name, image, onSelect, isSe
       <div className="w-full h-24 overflow-hidden rounded-t-lg">
         <img 
           src={image} 
+      style={{ pointerEvents: 'auto' }}
           alt={name}
           className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
+          style={{ pointerEvents: 'none' }}
         />
       </div>
       <div className="flex-1 flex items-center justify-center px-2">
