@@ -7,12 +7,6 @@ interface MaterialCardProps {
   isSelected: boolean;
 }
 
-const MaterialCard: React.FC<MaterialCardProps> = ({ name, image, onSelect, isSelected }) => {
-  const handleClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    console.log('MaterialCard clicked:', name);
-    onSelect();
   };
 
   return (
@@ -25,18 +19,10 @@ const MaterialCard: React.FC<MaterialCardProps> = ({ name, image, onSelect, isSe
           ? 'bg-amber-50 border-amber-300 shadow-amber-200/50' 
           : 'bg-white border-gray-200 hover:border-amber-200'
         }
-      `}
-      onClick={onSelect}
     >
       <div className="w-full h-24 overflow-hidden rounded-t-lg">
         <img 
           src={image}
-          onClick={handleClick}
-          style={{ 
-            pointerEvents: 'auto',
-            cursor: 'pointer',
-            userSelect: 'none'
-          }}
           alt={name}
           className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
           style={{ pointerEvents: 'none' }}

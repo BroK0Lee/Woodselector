@@ -34,6 +34,9 @@ const WoodMaterialSelector: React.FC = () => {
   const cameraRef = useRef<THREE.PerspectiveCamera>();
   const controlsRef = useRef<OrbitControls>();
   const objectsRef = useRef<CSS3DObject[]>([]);
+  const invisibleObjectsRef = useRef<THREE.Mesh[]>([]);
+  const raycasterRef = useRef<THREE.Raycaster>();
+  const mouseRef = useRef<THREE.Vector2>();
   const [selectedMaterial, setSelectedMaterial] = useState<string | null>(null);
   const [modalMaterial, setModalMaterial] = useState<Material | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -74,8 +77,15 @@ const WoodMaterialSelector: React.FC = () => {
     controls.enablePan = false;
     controlsRef.current = controls;
 
+    // Raycaster setup
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
+    raycasterRef.current = raycaster;
+    mouseRef.current = mouse;
+
     // Create material objects
     const objects: CSS3DObject[] = [];
+    const invisibleObjects: THREE.Mesh[] = [];
     const radius = 200
     ;
 
@@ -84,18 +94,9 @@ const WoodMaterialSelector: React.FC = () => {
       const element = document.createElement('div');
       element.style.width = '128px';
       element.style.height = '160px';
-      element.style.pointerEvents = 'auto';
-      element.style.cursor = 'pointer';
+      element.style.pointerEvents = 'none';
       element.id = `material-${material.id}`;
       
-      // Add click handler directly to the DOM element
-      element.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        console.log('Clicked on material:', material.name);
-        setModalMaterial(material);
-        setIsModalOpen(true);
-      });
 
       // Create CSS3D object
       const objectCSS = new CSS3DObject(element);
@@ -128,12 +129,53 @@ const WoodMaterialSelector: React.FC = () => {
       targetRotation.copy(tempObject.rotation);
       (objectCSS as any).targetRotation = targetRotation;
 
+      // Create invisible geometry for raycasting
+      const geometry = new THREE.PlaneGeometry(128, 160);
+      const invisibleMaterial = new THREE.MeshBasicMaterial({ 
+        transparent: true, 
+        opacity: 0,
+        side: THREE.DoubleSide
+      });
+      const invisibleMesh = new THREE.Mesh(geometry, invisibleMaterial);
+      invisibleMesh.position.copy(targetPosition);
+      invisibleMesh.lookAt(lookTarget);
+      (invisibleMesh as any).materialData = material;
+      
+      scene.add(invisibleMesh);
+      invisibleObjects.push(invisibleMesh);
       scene.add(objectCSS);
       objects.push(objectCSS);
     });
 
     objectsRef.current = objects;
+    invisibleObjectsRef.current = invisibleObjects;
 
+    // Mouse click handler
+    const handleClick = (event: MouseEvent) => {
+      if (!cameraRef.current || !raycasterRef.current || !mouseRef.current) return;
+      
+      // Calculate mouse position in normalized device coordinates
+      const rect = renderer.domElement.getBoundingClientRect();
+      mouseRef.current.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+      mouseRef.current.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+      
+      // Update the picking ray with the camera and mouse position
+      raycasterRef.current.setFromCamera(mouseRef.current, cameraRef.current);
+      
+      // Calculate objects intersecting the picking ray
+      const intersects = raycasterRef.current.intersectObjects(invisibleObjectsRef.current);
+      
+      if (intersects.length > 0) {
+        const clickedObject = intersects[0].object as any;
+        const material = clickedObject.materialData;
+        console.log('Clicked on material via raycasting:', material.name);
+        setModalMaterial(material);
+        setIsModalOpen(true);
+      }
+    };
+
+    // Add click event listener
+    renderer.domElement.addEventListener('click', handleClick);
     // Animation loop
     let animationId: number;
     const animate = () => {
@@ -159,6 +201,7 @@ const WoodMaterialSelector: React.FC = () => {
 
     return () => {
       window.removeEventListener('resize', handleResize);
+      renderer.domElement.removeEventListener('click', handleClick);
       cancelAnimationFrame(animationId);
       if (mountRef.current && renderer.domElement) {
         mountRef.current.removeChild(renderer.domElement);
@@ -191,6 +234,12 @@ const WoodMaterialSelector: React.FC = () => {
         obj.rotation.x = startRot.x + (targetRot.x - startRot.x) * eased;
         obj.rotation.y = startRot.y + (targetRot.y - startRot.y) * eased;
         obj.rotation.z = startRot.z + (targetRot.z - startRot.z) * eased;
+        
+        // Update invisible mesh position and rotation
+        if (invisibleObjectsRef.current[index]) {
+          invisibleObjectsRef.current[index].position.copy(obj.position);
+          invisibleObjectsRef.current[index].rotation.copy(obj.rotation);
+        }
       });
 
       if (progress < 1) {
