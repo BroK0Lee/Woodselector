@@ -86,8 +86,7 @@ const WoodMaterialSelector: React.FC = () => {
     // Create material objects
     const objects: CSS3DObject[] = [];
     const invisibleObjects: THREE.Mesh[] = [];
-    const radius = 200
-    ;
+    const radius = 200;
 
     materials.forEach((material, index) => {
       // Create DOM element container
@@ -219,7 +218,6 @@ const WoodMaterialSelector: React.FC = () => {
       const progress = Math.min(elapsed / duration, 1);
       const eased = easeOutExpo(progress);
 
-      objectsRef.current.forEach((obj) => {
       objectsRef.current.forEach((obj, index) => {
         const targetPos = (obj as any).targetPosition;
         const targetRot = (obj as any).targetRotation;
