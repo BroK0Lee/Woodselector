@@ -220,6 +220,7 @@ const WoodMaterialSelector: React.FC = () => {
       const eased = easeOutExpo(progress);
 
       objectsRef.current.forEach((obj) => {
+      objectsRef.current.forEach((obj, index) => {
         const targetPos = (obj as any).targetPosition;
         const targetRot = (obj as any).targetRotation;
         const startPos = (obj as any).startPosition || obj.position.clone();
