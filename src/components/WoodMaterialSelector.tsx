@@ -191,6 +191,26 @@ const WoodMaterialSelector: React.FC = () => {
 
     // Start sphere animation
     animateToSphere();
+
+    // Handle resize
+    const handleResize = () => {
+      if (cameraRef.current && rendererRef.current) {
+        cameraRef.current.aspect = window.innerWidth / window.innerHeight;
+        cameraRef.current.updateProjectionMatrix();
+        rendererRef.current.setSize(window.innerWidth, window.innerHeight);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      renderer.domElement.removeEventListener('click', handleClick);
+      cancelAnimationFrame(animationId);
+      if (mountRef.current && renderer.domElement) {
+        mountRef.current.removeChild(renderer.domElement);
+      }
+    };
   }, []);
 
   const animateCardToFront = (material: Material, cardIndex: number) => {
@@ -347,27 +367,7 @@ const WoodMaterialSelector: React.FC = () => {
     
     // Fermer le modal et remettre la carte en place
     handleModalClose();
-
-    // Handle resize
-    const handleResize = () => {
-      if (cameraRef.current && rendererRef.current) {
-        cameraRef.current.aspect = window.innerWidth / window.innerHeight;
-        cameraRef.current.updateProjectionMatrix();
-        rendererRef.current.setSize(window.innerWidth, window.innerHeight);
-      }
-    };
-
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      renderer.domElement.removeEventListener('click', handleClick);
-      cancelAnimationFrame(animationId);
-      if (mountRef.current && renderer.domElement) {
-        mountRef.current.removeChild(renderer.domElement);
-      }
-    };
-  }, []);
+  };
 
   const animateToSphere = () => {
     setIsAnimating(true);
