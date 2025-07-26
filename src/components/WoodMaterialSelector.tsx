@@ -233,6 +233,7 @@ const WoodMaterialSelector: React.FC = () => {
     
     // Position finale (vers la caméra)
     const endPosition = new THREE.Vector3(0, 0, 800);
+    // Rotation finale pour faire face à la caméra
     const endRotation = new THREE.Euler(0, 0, 0);
     const endScale = new THREE.Vector3(2, 2, 2);
     
