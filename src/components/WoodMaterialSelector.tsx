@@ -238,7 +238,7 @@ const WoodMaterialSelector: React.FC = () => {
     
     // Calculer la rotation pour faire face à la caméra
     const lookAtMatrix = new THREE.Matrix4();
-    lookAtMatrix.lookAt(endPosition, cameraPosition, camera.up);
+    lookAtMatrix.lookAt(cameraPosition, endPosition, camera.up);
     const endRotation = new THREE.Euler();
     endRotation.setFromRotationMatrix(lookAtMatrix);
     
