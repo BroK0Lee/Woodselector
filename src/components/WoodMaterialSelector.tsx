@@ -226,15 +226,27 @@ const WoodMaterialSelector: React.FC = () => {
       controlsRef.current.enabled = false;
     }
     
+    // Obtenir la position et direction actuelles de la caméra
+    const camera = cameraRef.current!;
+    const cameraPosition = camera.position.clone();
+    const cameraDirection = new THREE.Vector3();
+    camera.getWorldDirection(cameraDirection);
+    
+    // Calculer la position finale devant la caméra
+    const distanceFromCamera = 800;
+    const endPosition = cameraPosition.clone().add(cameraDirection.multiplyScalar(distanceFromCamera));
+    
+    // Calculer la rotation pour faire face à la caméra
+    const lookAtMatrix = new THREE.Matrix4();
+    lookAtMatrix.lookAt(endPosition, cameraPosition, camera.up);
+    const endRotation = new THREE.Euler();
+    endRotation.setFromRotationMatrix(lookAtMatrix);
+    
     // Position et rotation initiales
     const startPosition = cardObject.position.clone();
     const startRotation = cardObject.rotation.clone();
     const startScale = cardObject.scale.clone();
     
-    // Position finale (vers la caméra)
-    const endPosition = new THREE.Vector3(0, 0, 800);
-    // Rotation finale pour faire face à la caméra
-    const endRotation = new THREE.Euler(0, 0, 0);
     const endScale = new THREE.Vector3(2, 2, 2);
     
     // Timeline GSAP
