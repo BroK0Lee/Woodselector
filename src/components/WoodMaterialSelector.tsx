@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import * as THREE from 'three';
+import { gsap } from 'gsap';
 import { CSS3DRenderer, CSS3DObject } from 'three/examples/jsm/renderers/CSS3DRenderer.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import MaterialCard from './MaterialCard';
@@ -42,6 +43,8 @@ const WoodMaterialSelector: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAnimating, setIsAnimating] = useState(true);
   const [confirmedMaterial, setConfirmedMaterial] = useState<Material | null>(null);
+  const [isAnimatingCard, setIsAnimatingCard] = useState(false);
+  const animatingCardRef = useRef<CSS3DObject | null>(null);
 
   useEffect(() => {
     if (!mountRef.current) return;
@@ -139,6 +142,7 @@ const WoodMaterialSelector: React.FC = () => {
       invisibleMesh.position.copy(targetPosition);
       invisibleMesh.lookAt(lookTarget);
       (invisibleMesh as any).materialData = material;
+      (invisibleMesh as any).cardIndex = index;
       
       scene.add(invisibleMesh);
       invisibleObjects.push(invisibleMesh);
@@ -167,9 +171,10 @@ const WoodMaterialSelector: React.FC = () => {
       if (intersects.length > 0) {
         const clickedObject = intersects[0].object as any;
         const material = clickedObject.materialData;
-        console.log('Clicked on material via raycasting:', material.name);
-        setModalMaterial(material);
-        setIsModalOpen(true);
+        
+        if (!isAnimatingCard) {
+          animateCardToFront(material, clickedObject.cardIndex);
+        }
       }
     };
 
@@ -186,6 +191,162 @@ const WoodMaterialSelector: React.FC = () => {
 
     // Start sphere animation
     animateToSphere();
+  }, []);
+
+  const animateCardToFront = (material: Material, cardIndex: number) => {
+    if (isAnimatingCard) return;
+    
+    setIsAnimatingCard(true);
+    const cardObject = objectsRef.current[cardIndex];
+    const invisibleObject = invisibleObjectsRef.current[cardIndex];
+    animatingCardRef.current = cardObject;
+    
+    // Désactiver les contrôles pendant l'animation
+    if (controlsRef.current) {
+      controlsRef.current.enabled = false;
+    }
+    
+    // Position et rotation initiales
+    const startPosition = cardObject.position.clone();
+    const startRotation = cardObject.rotation.clone();
+    const startScale = cardObject.scale.clone();
+    
+    // Position finale (vers la caméra)
+    const endPosition = new THREE.Vector3(0, 0, 800);
+    const endRotation = new THREE.Euler(0, 0, 0);
+    const endScale = new THREE.Vector3(2, 2, 2);
+    
+    // Timeline GSAP
+    const tl = gsap.timeline({
+      onComplete: () => {
+        // Afficher le modal après l'animation
+        setModalMaterial(material);
+        setIsModalOpen(true);
+        
+        // Masquer la carte pendant que le modal est ouvert
+        cardObject.visible = false;
+        invisibleObject.visible = false;
+      }
+    });
+    
+    // Animation de sortie de la sphère et approche
+    tl.to(cardObject.position, {
+      duration: 0.8,
+      x: endPosition.x,
+      y: endPosition.y,
+      z: endPosition.z,
+      ease: "power2.out"
+    })
+    .to(cardObject.rotation, {
+      duration: 0.8,
+      x: endRotation.x,
+      y: endRotation.y,
+      z: endRotation.z,
+      ease: "power2.out"
+    }, 0)
+    .to(cardObject.scale, {
+      duration: 0.8,
+      x: endScale.x,
+      y: endScale.y,
+      z: endScale.z,
+      ease: "power2.out"
+    }, 0)
+    .to(invisibleObject.position, {
+      duration: 0.8,
+      x: endPosition.x,
+      y: endPosition.y,
+      z: endPosition.z,
+      ease: "power2.out"
+    }, 0)
+    .to(invisibleObject.rotation, {
+      duration: 0.8,
+      x: endRotation.x,
+      y: endRotation.y,
+      z: endRotation.z,
+      ease: "power2.out"
+    }, 0);
+  };
+
+  const resetCardPosition = (cardIndex: number) => {
+    const cardObject = objectsRef.current[cardIndex];
+    const invisibleObject = invisibleObjectsRef.current[cardIndex];
+    const targetPosition = (cardObject as any).targetPosition;
+    const targetRotation = (cardObject as any).targetRotation;
+    
+    // Animation de retour à la position originale
+    const tl = gsap.timeline({
+      onComplete: () => {
+        setIsAnimatingCard(false);
+        animatingCardRef.current = null;
+        
+        // Réactiver les contrôles
+        if (controlsRef.current) {
+          controlsRef.current.enabled = true;
+        }
+      }
+    });
+    
+    // Rendre la carte visible
+    cardObject.visible = true;
+    invisibleObject.visible = true;
+    
+    tl.to(cardObject.position, {
+      duration: 0.6,
+      x: targetPosition.x,
+      y: targetPosition.y,
+      z: targetPosition.z,
+      ease: "power2.inOut"
+    })
+    .to(cardObject.rotation, {
+      duration: 0.6,
+      x: targetRotation.x,
+      y: targetRotation.y,
+      z: targetRotation.z,
+      ease: "power2.inOut"
+    }, 0)
+    .to(cardObject.scale, {
+      duration: 0.6,
+      x: 1,
+      y: 1,
+      z: 1,
+      ease: "power2.inOut"
+    }, 0)
+    .to(invisibleObject.position, {
+      duration: 0.6,
+      x: targetPosition.x,
+      y: targetPosition.y,
+      z: targetPosition.z,
+      ease: "power2.inOut"
+    }, 0)
+    .to(invisibleObject.rotation, {
+      duration: 0.6,
+      x: targetRotation.x,
+      y: targetRotation.y,
+      z: targetRotation.z,
+      ease: "power2.inOut"
+    }, 0);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+    setModalMaterial(null);
+    
+    // Trouver l'index de la carte animée et la remettre en place
+    if (animatingCardRef.current) {
+      const cardIndex = objectsRef.current.findIndex(obj => obj === animatingCardRef.current);
+      if (cardIndex !== -1) {
+        resetCardPosition(cardIndex);
+      }
+    }
+  };
+
+  const handleMaterialConfirm = (material: Material) => {
+    setConfirmedMaterial(material);
+    setSelectedMaterial(material.id);
+    console.log('Confirmed material:', material.name);
+    
+    // Fermer le modal et remettre la carte en place
+    handleModalClose();
 
     // Handle resize
     const handleResize = () => {
@@ -256,19 +417,7 @@ const WoodMaterialSelector: React.FC = () => {
   };
 
   const handleMaterialSelect = (material: Material) => {
-    setModalMaterial(material);
-    setIsModalOpen(true);
-  };
-
-  const handleModalClose = () => {
-    setIsModalOpen(false);
-    setModalMaterial(null);
-  };
-
-  const handleMaterialConfirm = (material: Material) => {
-    setConfirmedMaterial(material);
-    setSelectedMaterial(material.id);
-    console.log('Confirmed material:', material.name);
+    // Cette fonction n'est plus utilisée car on utilise le raycasting
   };
 
   return (
@@ -306,7 +455,9 @@ const WoodMaterialSelector: React.FC = () => {
           <p className="text-sm text-gray-600">
             {isAnimating 
               ? 'Animation en cours...' 
-              : 'Cliquez et faites glisser pour explorer'
+              : isAnimatingCard
+                ? 'Chargement du matériau...'
+                : 'Cliquez et faites glisser pour explorer'
             }
           </p>
           {selectedMaterial && (
@@ -327,7 +478,9 @@ const WoodMaterialSelector: React.FC = () => {
 
       {/* Instructions */}
       <div className="absolute bottom-6 right-6 z-10">
-        <div className="bg-black/70 text-white rounded-lg p-3 text-sm">
+        <div className={`bg-black/70 text-white rounded-lg p-3 text-sm transition-opacity duration-300 ${
+          isAnimatingCard ? 'opacity-50' : 'opacity-100'
+        }`}>
           <p>🖱️ Clic-glisser: Rotation</p>
           <p>🔍 Molette: Zoom</p>
           <p>👆 Clic: Sélection</p>
