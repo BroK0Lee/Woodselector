@@ -233,24 +233,8 @@ const WoodMaterialSelector: React.FC = () => {
     const cameraDirection = new THREE.Vector3();
     camera.getWorldDirection(cameraDirection);
     
-    // Calculer la position finale devant la caméra pour une carte plein écran
-    // Distance calculée pour que la carte 100vw x 100vh soit entièrement visible
-    const fov = camera.fov * Math.PI / 180; // Convertir en radians
-    const aspect = camera.aspect;
-    
-    // Calculer la distance nécessaire pour voir une carte de taille écran
-    // En considérant que la carte fera 100vw x 100vh (viewport dimensions)
-    const viewportHeight = window.innerHeight;
-    const viewportWidth = window.innerWidth;
-    
-    // Distance basée sur la hauteur de l'écran et le FOV
-    const distanceFromHeight = (viewportHeight / 2) / Math.tan(fov / 2);
-    // Distance basée sur la largeur de l'écran et l'aspect ratio
-    const distanceFromWidth = (viewportWidth / 2) / Math.tan(fov / 2) / aspect;
-    
-    // Prendre la distance la plus grande pour s'assurer que tout est visible
-    const distanceFromCamera = Math.max(distanceFromHeight, distanceFromWidth) * 1.1; // 10% de marge
-    
+    // Position finale devant la caméra à une distance fixe
+    const distanceFromCamera = 2000; // Distance fixe pour une bonne visibilité
     const endPosition = cameraPosition.clone().add(cameraDirection.multiplyScalar(distanceFromCamera));
     
     // Calculer la rotation pour faire face à la caméra
@@ -262,13 +246,6 @@ const WoodMaterialSelector: React.FC = () => {
     // Position et rotation initiales
     const startPosition = cardObject.position.clone();
     const startRotation = cardObject.rotation.clone();
-    const startScale = cardObject.scale.clone();
-    
-    // Échelle pour que la carte occupe exactement l'écran
-    // La carte de base fait 512x288, on veut qu'elle fasse 100vw x 100vh
-    const scaleX = viewportWidth / 512;
-    const scaleY = viewportHeight / 288;
-    const endScale = new THREE.Vector3(scaleX, scaleY, 1);
     
     // Timeline GSAP
     const tl = gsap.timeline({
@@ -291,13 +268,6 @@ const WoodMaterialSelector: React.FC = () => {
       x: endRotation.x,
       y: endRotation.y,
       z: endRotation.z,
-      ease: "power2.out"
-    }, 0)
-    .to(cardObject.scale, {
-      duration: 0.8,
-      x: endScale.x,
-      y: endScale.y,
-      z: endScale.z,
       ease: "power2.out"
     }, 0)
     .to(invisibleObject.position, {
