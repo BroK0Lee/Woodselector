@@ -42,7 +42,10 @@ const WoodMaterialSelector: React.FC = () => {
   const [isAnimating, setIsAnimating] = useState(true);
   const [confirmedMaterial, setConfirmedMaterial] = useState<Material | null>(null);
   const [isAnimatingCard, setIsAnimatingCard] = useState(false);
+  const [isCameraMoving, setIsCameraMoving] = useState(false);
   const animatingCardRef = useRef<CSS3DObject | null>(null);
+  const cameraMovementTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const lastCameraPositionRef = useRef<THREE.Vector3>(new THREE.Vector3());
 
   useEffect(() => {
     if (!mountRef.current) return;
