@@ -256,6 +256,9 @@ const MaterialCard: React.FC<MaterialCardProps> = ({
   const unfoldCard = () => {
     if (!cardRef.current || !detailsRef.current || !summaryRef.current) return;
 
+    // Définir l'origine de transformation au centre
+    cardRef.current.style.transformOrigin = 'center center';
+
     const tl = gsap.timeline();
 
     // Masquer la vue résumé
@@ -271,6 +274,7 @@ const MaterialCard: React.FC<MaterialCardProps> = ({
       duration: 0.5,
       width: "100vw",
       height: "100vh",
+      transformOrigin: "center center",
       ease: "back.out(1.7)"
     }, 0.2)
     // Afficher la vue détaillée
@@ -291,6 +295,9 @@ const MaterialCard: React.FC<MaterialCardProps> = ({
   const foldCard = () => {
     if (!cardRef.current || !detailsRef.current || !summaryRef.current) return;
 
+    // Maintenir l'origine de transformation au centre
+    cardRef.current.style.transformOrigin = 'center center';
+
     const tl = gsap.timeline();
 
     // Masquer la vue détaillée
@@ -306,6 +313,7 @@ const MaterialCard: React.FC<MaterialCardProps> = ({
       duration: 0.4,
       width: "512px",
       height: "288px",
+      transformOrigin: "center center",
       ease: "power2.inOut"
     }, 0.2)
     // Afficher la vue résumé
