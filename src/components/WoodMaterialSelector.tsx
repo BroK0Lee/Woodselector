@@ -60,7 +60,7 @@ const WoodMaterialSelector: React.FC = () => {
       1,
       5000
     );
-    camera.position.set(0, 0, 2000);
+    camera.position.set(0, 0, 3000);
     cameraRef.current = camera;
 
     // Renderer setup
@@ -75,8 +75,8 @@ const WoodMaterialSelector: React.FC = () => {
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
-    controls.minDistance = 800;
-    controls.maxDistance = 4000;
+    controls.minDistance = 1500;
+    controls.maxDistance = 6000;
     controls.enablePan = false;
     controlsRef.current = controls;
 
