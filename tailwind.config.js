@@ -3,6 +3,9 @@ export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
+      width: {
+        '128': '32rem',
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

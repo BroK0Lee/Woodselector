@@ -89,13 +89,13 @@ const WoodMaterialSelector: React.FC = () => {
     // Create material objects
     const objects: CSS3DObject[] = [];
     const invisibleObjects: THREE.Mesh[] = [];
-    const radius = 400;
+    const radius = 800;
 
     materials.forEach((material, index) => {
       // Create DOM element container
       const element = document.createElement('div');
-      element.style.width = '256px';
-      element.style.height = '320px';
+      element.style.width = '512px';
+      element.style.height = '288px';
       element.style.pointerEvents = 'none';
       element.id = `material-${material.id}`;
       
@@ -132,7 +132,7 @@ const WoodMaterialSelector: React.FC = () => {
       (objectCSS as any).targetRotation = targetRotation;
 
       // Create invisible geometry for raycasting
-      const geometry = new THREE.PlaneGeometry(256, 320);
+      const geometry = new THREE.PlaneGeometry(512, 288);
       const invisibleMaterial = new THREE.MeshBasicMaterial({ 
         transparent: true, 
         opacity: 0,
