@@ -269,8 +269,8 @@ const MaterialCard: React.FC<MaterialCardProps> = ({
     // Redimensionner la carte
     .to(cardRef.current, {
       duration: 0.5,
-      width: "800px",
-      height: "600px",
+      width: "100vw",
+      height: "100vh",
       ease: "back.out(1.7)"
     }, 0.2)
     // Afficher la vue détaillée
@@ -386,22 +386,15 @@ const MaterialCard: React.FC<MaterialCardProps> = ({
       <div ref={detailsRef} className={`${!isDetailedView ? 'hidden' : 'flex'} flex-col w-full h-full p-4 overflow-y-auto`}>
         {/* En-tête */}
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold text-amber-800 flex items-center gap-2">
-            <Leaf className="w-5 h-5" />
+          <h2 className="text-2xl font-bold text-amber-800 flex items-center gap-2">
+            <Leaf className="w-6 h-6" />
             {name}
           </h2>
-          <button
-            onClick={onBack}
-            className="flex items-center gap-1 px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Retour
-          </button>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 flex-1">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 flex-1">
           {/* Carrousel d'images */}
-          <div className="space-y-2">
+          <div className="space-y-3">
             <div className="relative aspect-video bg-gray-100 rounded-lg overflow-hidden">
               <img
                 src={details.images[currentImageIndex]}
@@ -413,25 +406,25 @@ const MaterialCard: React.FC<MaterialCardProps> = ({
                 <>
                   <button
                     onClick={prevImage}
-                    className="absolute left-1 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-1 rounded-full transition-colors"
+                    className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-colors"
                   >
-                    <ChevronLeft className="w-3 h-3" />
+                    <ChevronLeft className="w-5 h-5" />
                   </button>
                   <button
                     onClick={nextImage}
-                    className="absolute right-1 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-1 rounded-full transition-colors"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-colors"
                   >
-                    <ChevronRight className="w-3 h-3" />
+                    <ChevronRight className="w-5 h-5" />
                   </button>
                 </>
               )}
               
-              <div className="absolute bottom-1 left-1/2 -translate-x-1/2 flex gap-1">
+              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
                 {details.images.map((_, index) => (
                   <button
                     key={index}
                     onClick={() => setCurrentImageIndex(index)}
-                    className={`w-1.5 h-1.5 rounded-full transition-colors ${
+                    className={`w-2 h-2 rounded-full transition-colors ${
                       index === currentImageIndex ? 'bg-white' : 'bg-white/50'
                     }`}
                   />
@@ -440,12 +433,12 @@ const MaterialCard: React.FC<MaterialCardProps> = ({
             </div>
 
             {/* Miniatures */}
-            <div className="flex gap-1 overflow-x-auto">
+            <div className="flex gap-2 overflow-x-auto">
               {details.images.map((image, index) => (
                 <button
                   key={index}
                   onClick={() => setCurrentImageIndex(index)}
-                  className={`flex-shrink-0 w-12 h-8 rounded border overflow-hidden transition-colors ${
+                  className={`flex-shrink-0 w-16 h-10 rounded border overflow-hidden transition-colors ${
                     index === currentImageIndex ? 'border-amber-500' : 'border-gray-200'
                   }`}
                 >
@@ -460,49 +453,49 @@ const MaterialCard: React.FC<MaterialCardProps> = ({
           </div>
 
           {/* Détails du matériau */}
-          <div className="space-y-3 text-sm">
+          <div className="space-y-4 text-base">
             {/* Description */}
             <div>
-              <h3 className="text-base font-semibold text-gray-800 mb-1">Description</h3>
-              <p className="text-gray-600 leading-relaxed text-xs">{details.description}</p>
+              <h3 className="text-lg font-semibold text-gray-800 mb-2">Description</h3>
+              <p className="text-gray-600 leading-relaxed text-sm">{details.description}</p>
             </div>
 
             {/* Caractéristiques */}
             <div>
-              <h3 className="text-base font-semibold text-gray-800 mb-2 flex items-center gap-1">
-                <Star className="w-4 h-4 text-amber-500" />
+              <h3 className="text-lg font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                <Star className="w-5 h-5 text-amber-500" />
                 Caractéristiques
               </h3>
-              <div className="grid grid-cols-2 gap-2">
-                <div className="bg-amber-50 p-2 rounded">
-                  <div className="text-xs text-amber-700 font-medium">Densité</div>
-                  <div className="text-gray-800 text-xs">{details.characteristics.density}</div>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="bg-amber-50 p-3 rounded">
+                  <div className="text-sm text-amber-700 font-medium">Densité</div>
+                  <div className="text-gray-800 text-sm">{details.characteristics.density}</div>
                 </div>
-                <div className="bg-amber-50 p-2 rounded">
-                  <div className="text-xs text-amber-700 font-medium">Dureté</div>
-                  <div className="text-gray-800 text-xs">{details.characteristics.hardness}</div>
+                <div className="bg-amber-50 p-3 rounded">
+                  <div className="text-sm text-amber-700 font-medium">Dureté</div>
+                  <div className="text-gray-800 text-sm">{details.characteristics.hardness}</div>
                 </div>
-                <div className="bg-amber-50 p-2 rounded">
-                  <div className="text-xs text-amber-700 font-medium">Durabilité</div>
-                  <div className="text-gray-800 text-xs">{details.characteristics.durability}</div>
+                <div className="bg-amber-50 p-3 rounded">
+                  <div className="text-sm text-amber-700 font-medium">Durabilité</div>
+                  <div className="text-gray-800 text-sm">{details.characteristics.durability}</div>
                 </div>
-                <div className="bg-amber-50 p-2 rounded">
-                  <div className="text-xs text-amber-700 font-medium">Couleur</div>
-                  <div className="text-gray-800 text-xs">{details.characteristics.color}</div>
+                <div className="bg-amber-50 p-3 rounded">
+                  <div className="text-sm text-amber-700 font-medium">Couleur</div>
+                  <div className="text-gray-800 text-sm">{details.characteristics.color}</div>
                 </div>
               </div>
             </div>
 
             {/* Applications */}
             <div>
-              <h3 className="text-base font-semibold text-gray-800 mb-2 flex items-center gap-1">
-                <Hammer className="w-4 h-4 text-blue-500" />
+              <h3 className="text-lg font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                <Hammer className="w-5 h-5 text-blue-500" />
                 Applications
               </h3>
-              <ul className="space-y-1">
-                {details.applications.slice(0, 3).map((app, index) => (
-                  <li key={index} className="flex items-center gap-1 text-gray-600 text-xs">
-                    <div className="w-1 h-1 bg-blue-500 rounded-full flex-shrink-0" />
+              <ul className="space-y-2">
+                {details.applications.map((app, index) => (
+                  <li key={index} className="flex items-center gap-2 text-gray-600 text-sm">
+                    <div className="w-1.5 h-1.5 bg-blue-500 rounded-full flex-shrink-0" />
                     {app}
                   </li>
                 ))}
@@ -511,14 +504,14 @@ const MaterialCard: React.FC<MaterialCardProps> = ({
 
             {/* Recommandations */}
             <div>
-              <h3 className="text-base font-semibold text-gray-800 mb-2 flex items-center gap-1">
-                <Shield className="w-4 h-4 text-green-500" />
+              <h3 className="text-lg font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                <Shield className="w-5 h-5 text-green-500" />
                 Recommandations
               </h3>
-              <ul className="space-y-1">
-                {details.recommendations.slice(0, 2).map((rec, index) => (
-                  <li key={index} className="flex items-center gap-1 text-gray-600 text-xs">
-                    <div className="w-1 h-1 bg-green-500 rounded-full flex-shrink-0" />
+              <ul className="space-y-2">
+                {details.recommendations.map((rec, index) => (
+                  <li key={index} className="flex items-center gap-2 text-gray-600 text-sm">
+                    <div className="w-1.5 h-1.5 bg-green-500 rounded-full flex-shrink-0" />
                     {rec}
                   </li>
                 ))}
@@ -528,12 +521,19 @@ const MaterialCard: React.FC<MaterialCardProps> = ({
         </div>
 
         {/* Boutons */}
-        <div className="flex gap-2 pt-3 mt-auto">
+        <div className="flex gap-3 pt-4 mt-auto">
+          <button
+            onClick={onBack}
+            className="px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-md flex items-center justify-center gap-2 text-base font-medium transition-colors"
+          >
+            <ArrowLeft className="w-5 h-5" />
+            Retour
+          </button>
           <button
             onClick={handleConfirm}
-            className="flex-1 bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-md flex items-center justify-center gap-2 text-sm font-medium transition-colors"
+            className="flex-1 bg-amber-600 hover:bg-amber-700 text-white px-6 py-3 rounded-md flex items-center justify-center gap-2 text-base font-medium transition-colors"
           >
-            <Check className="w-4 h-4" />
+            <Check className="w-5 h-5" />
             Sélectionner ce matériau
           </button>
         </div>
