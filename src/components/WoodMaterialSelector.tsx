@@ -14,18 +14,18 @@ interface Material {
 }
 
 const materials: Material[] = [
-  { id: 'oak', name: 'Chêne', image: 'https://www.canva.com/design/DAGpk0gyHu0/Wf27fDkBifMiP2BDOlKnNg/view' },
-  { id: 'walnut', name: 'Noyer', image: 'https://images.pexels.com/photos/1108572/pexels-photo-1108572.jpeg?auto=compress&cs=tinysrgb&w=120&h=100&fit=crop' },
-  { id: 'maple', name: 'Érable', image: 'https://images.pexels.com/photos/129733/pexels-photo-129733.jpeg?auto=compress&cs=tinysrgb&w=120&h=100&fit=crop' },
-  { id: 'pine', name: 'Pin', image: 'https://images.pexels.com/photos/1267239/pexels-photo-1267239.jpeg?auto=compress&cs=tinysrgb&w=120&h=100&fit=crop' },
-  { id: 'cedar', name: 'Cèdre', image: 'https://images.pexels.com/photos/1108101/pexels-photo-1108101.jpeg?auto=compress&cs=tinysrgb&w=120&h=100&fit=crop' },
-  { id: 'birch', name: 'Bouleau', image: 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?auto=compress&cs=tinysrgb&w=120&h=100&fit=crop' },
-  { id: 'cherry', name: 'Cerisier', image: 'https://images.pexels.com/photos/1108102/pexels-photo-1108102.jpeg?auto=compress&cs=tinysrgb&w=120&h=100&fit=crop' },
-  { id: 'mahogany', name: 'Acajou', image: 'https://images.pexels.com/photos/1108573/pexels-photo-1108573.jpeg?auto=compress&cs=tinysrgb&w=120&h=100&fit=crop' },
-  { id: 'ash', name: 'Frêne', image: 'https://images.pexels.com/photos/1108574/pexels-photo-1108574.jpeg?auto=compress&cs=tinysrgb&w=120&h=100&fit=crop' },
-  { id: 'beech', name: 'Hêtre', image: 'https://images.pexels.com/photos/1267360/pexels-photo-1267360.jpeg?auto=compress&cs=tinysrgb&w=120&h=100&fit=crop' },
-  { id: 'teak', name: 'Teck', image: 'https://images.pexels.com/photos/1108103/pexels-photo-1108103.jpeg?auto=compress&cs=tinysrgb&w=120&h=100&fit=crop' },
-  { id: 'bamboo', name: 'Bambou', image: 'https://images.pexels.com/photos/1108575/pexels-photo-1108575.jpeg?auto=compress&cs=tinysrgb&w=120&h=100&fit=crop' }
+  { id: 'oak', name: 'Chêne', image: 'https://images.pexels.com/photos/1108572/pexels-photo-1108572.jpeg?auto=compress&cs=tinysrgb&w=480&h=400&fit=crop' },
+  { id: 'walnut', name: 'Noyer', image: 'https://images.pexels.com/photos/1108572/pexels-photo-1108572.jpeg?auto=compress&cs=tinysrgb&w=480&h=400&fit=crop' },
+  { id: 'maple', name: 'Érable', image: 'https://images.pexels.com/photos/129733/pexels-photo-129733.jpeg?auto=compress&cs=tinysrgb&w=480&h=400&fit=crop' },
+  { id: 'pine', name: 'Pin', image: 'https://images.pexels.com/photos/1267239/pexels-photo-1267239.jpeg?auto=compress&cs=tinysrgb&w=480&h=400&fit=crop' },
+  { id: 'cedar', name: 'Cèdre', image: 'https://images.pexels.com/photos/1108101/pexels-photo-1108101.jpeg?auto=compress&cs=tinysrgb&w=480&h=400&fit=crop' },
+  { id: 'birch', name: 'Bouleau', image: 'https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?auto=compress&cs=tinysrgb&w=480&h=400&fit=crop' },
+  { id: 'cherry', name: 'Cerisier', image: 'https://images.pexels.com/photos/1108102/pexels-photo-1108102.jpeg?auto=compress&cs=tinysrgb&w=480&h=400&fit=crop' },
+  { id: 'mahogany', name: 'Acajou', image: 'https://images.pexels.com/photos/1108573/pexels-photo-1108573.jpeg?auto=compress&cs=tinysrgb&w=480&h=400&fit=crop' },
+  { id: 'ash', name: 'Frêne', image: 'https://images.pexels.com/photos/1108574/pexels-photo-1108574.jpeg?auto=compress&cs=tinysrgb&w=480&h=400&fit=crop' },
+  { id: 'beech', name: 'Hêtre', image: 'https://images.pexels.com/photos/1267360/pexels-photo-1267360.jpeg?auto=compress&cs=tinysrgb&w=480&h=400&fit=crop' },
+  { id: 'teak', name: 'Teck', image: 'https://images.pexels.com/photos/1108103/pexels-photo-1108103.jpeg?auto=compress&cs=tinysrgb&w=480&h=400&fit=crop' },
+  { id: 'bamboo', name: 'Bambou', image: 'https://images.pexels.com/photos/1108575/pexels-photo-1108575.jpeg?auto=compress&cs=tinysrgb&w=480&h=400&fit=crop' }
 ];
 
 const WoodMaterialSelector: React.FC = () => {
@@ -94,8 +94,8 @@ const WoodMaterialSelector: React.FC = () => {
     materials.forEach((material, index) => {
       // Create DOM element container
       const element = document.createElement('div');
-      element.style.width = '128px';
-      element.style.height = '160px';
+      element.style.width = '256px';
+      element.style.height = '320px';
       element.style.pointerEvents = 'none';
       element.id = `material-${material.id}`;
       
@@ -132,7 +132,7 @@ const WoodMaterialSelector: React.FC = () => {
       (objectCSS as any).targetRotation = targetRotation;
 
       // Create invisible geometry for raycasting
-      const geometry = new THREE.PlaneGeometry(128, 160);
+      const geometry = new THREE.PlaneGeometry(256, 320);
       const invisibleMaterial = new THREE.MeshBasicMaterial({ 
         transparent: true, 
         opacity: 0,

@@ -15,7 +15,7 @@ const MaterialCard: React.FC<MaterialCardProps> = ({ name, image, onSelect, isSe
   return (
     <div 
       className={`
-        material-card w-32 h-40 rounded-lg shadow-lg border cursor-pointer
+        material-card w-64 h-80 rounded-lg shadow-lg border cursor-pointer
         flex flex-col items-center justify-center transition-all duration-300
         user-select-none hover:shadow-xl hover:scale-105 transform
         ${isSelected 
@@ -25,7 +25,7 @@ const MaterialCard: React.FC<MaterialCardProps> = ({ name, image, onSelect, isSe
       `}
       onClick={handleClick}
     >
-      <div className="w-full h-24 overflow-hidden rounded-t-lg">
+      <div className="w-full h-48 overflow-hidden rounded-t-lg">
         <img 
           src={image}
           alt={name}
@@ -35,7 +35,7 @@ const MaterialCard: React.FC<MaterialCardProps> = ({ name, image, onSelect, isSe
       </div>
       <div className="flex-1 flex items-center justify-center px-2">
         <span className={`
-          text-sm font-medium text-center transition-colors duration-200
+          text-lg font-medium text-center transition-colors duration-200
           ${isSelected ? 'text-amber-800' : 'text-gray-700'}
         `}>
           {name}
