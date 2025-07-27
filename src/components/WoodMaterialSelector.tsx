@@ -5,7 +5,6 @@ import { gsap } from 'gsap';
 import { CSS3DRenderer, CSS3DObject } from 'three/examples/jsm/renderers/CSS3DRenderer.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import MaterialCard from './MaterialCard';
-import MaterialModal from './MaterialModal';
 
 interface Material {
   name: string;
@@ -39,8 +38,7 @@ const WoodMaterialSelector: React.FC = () => {
   const raycasterRef = useRef<THREE.Raycaster>();
   const mouseRef = useRef<THREE.Vector2>();
   const [selectedMaterial, setSelectedMaterial] = useState<string | null>(null);
-  const [modalMaterial, setModalMaterial] = useState<Material | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [detailedMaterial, setDetailedMaterial] = useState<Material | null>(null);
   const [isAnimating, setIsAnimating] = useState(true);
   const [confirmedMaterial, setConfirmedMaterial] = useState<Material | null>(null);
   const [isAnimatingCard, setIsAnimatingCard] = useState(false);
@@ -253,13 +251,8 @@ const WoodMaterialSelector: React.FC = () => {
     // Timeline GSAP
     const tl = gsap.timeline({
       onComplete: () => {
-        // Afficher le modal après l'animation
-        setModalMaterial(material);
-        setIsModalOpen(true);
-        
-        // Masquer la carte pendant que le modal est ouvert
-        cardObject.visible = false;
-        invisibleObject.visible = false;
+        // Activer la vue détaillée après l'animation
+        setDetailedMaterial(material);
       }
     });
     
@@ -361,9 +354,8 @@ const WoodMaterialSelector: React.FC = () => {
     }, 0);
   };
 
-  const handleModalClose = () => {
-    setIsModalOpen(false);
-    setModalMaterial(null);
+  const handleDetailedViewClose = () => {
+    setDetailedMaterial(null);
     
     // Trouver l'index de la carte animée et la remettre en place
     if (animatingCardRef.current) {
@@ -379,8 +371,8 @@ const WoodMaterialSelector: React.FC = () => {
     setSelectedMaterial(material.id);
     console.log('Confirmed material:', material.name);
     
-    // Fermer le modal et remettre la carte en place
-    handleModalClose();
+    // Fermer la vue détaillée et remettre la carte en place
+    handleDetailedViewClose();
   };
 
   const animateToSphere = () => {
@@ -451,8 +443,12 @@ const WoodMaterialSelector: React.FC = () => {
               <MaterialCard
                 name={material.name}
                 image={material.image}
+                material={material}
                 onSelect={() => handleMaterialSelect(material)}
+                onConfirm={handleMaterialConfirm}
+                onBack={handleDetailedViewClose}
                 isSelected={selectedMaterial === material.id}
+                isDetailedView={detailedMaterial?.id === material.id}
               />,
               element
             )}
@@ -481,14 +477,6 @@ const WoodMaterialSelector: React.FC = () => {
           )}
         </div>
       </div>
-
-      {/* Modal */}
-      <MaterialModal
-        material={modalMaterial}
-        isOpen={isModalOpen}
-        onClose={handleModalClose}
-        onConfirm={handleMaterialConfirm}
-      />
 
       {/* Instructions */}
       <div className="absolute bottom-6 right-6 z-10">
