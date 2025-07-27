@@ -233,7 +233,7 @@ const WoodMaterialSelector: React.FC = () => {
     camera.getWorldDirection(cameraDirection);
     
     // Calculer la position finale devant la caméra
-    const distanceFromCamera = 800;
+    const distanceFromCamera = 1200;
     const endPosition = cameraPosition.clone().add(cameraDirection.multiplyScalar(distanceFromCamera));
     
     // Calculer la rotation pour faire face à la caméra
@@ -247,7 +247,8 @@ const WoodMaterialSelector: React.FC = () => {
     const startRotation = cardObject.rotation.clone();
     const startScale = cardObject.scale.clone();
     
-    const endScale = new THREE.Vector3(2, 2, 2);
+    // Échelle réduite pour occuper environ 1/3 de l'écran
+    const endScale = new THREE.Vector3(1.2, 1.2, 1.2);
     
     // Timeline GSAP
     const tl = gsap.timeline({
