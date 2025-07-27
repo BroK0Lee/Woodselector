@@ -61,7 +61,7 @@ const WoodMaterialSelector: React.FC = () => {
       1,
       5000
     );
-    camera.position.set(0, 0, 3000);
+    camera.position.set(0, 0, 10000);
     cameraRef.current = camera;
 
     // Renderer setup
