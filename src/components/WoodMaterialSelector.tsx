@@ -89,7 +89,7 @@ const WoodMaterialSelector: React.FC = () => {
     // Create material objects
     const objects: CSS3DObject[] = [];
     const invisibleObjects: THREE.Mesh[] = [];
-    const radius = 200;
+    const radius = 400;
 
     materials.forEach((material, index) => {
       // Create DOM element container
