@@ -256,8 +256,23 @@ const MaterialCard: React.FC<MaterialCardProps> = ({
   const unfoldCard = () => {
     if (!cardRef.current || !detailsRef.current || !summaryRef.current) return;
 
-    // Définir l'origine de transformation au centre
-    cardRef.current.style.transformOrigin = 'center center';
+    // Calculer la position initiale pour centrer l'expansion
+    const initialWidth = 512;
+    const initialHeight = 288;
+    const finalWidth = window.innerWidth;
+    const finalHeight = window.innerHeight;
+    
+    // Calculer le décalage nécessaire pour centrer l'expansion
+    const offsetX = (finalWidth - initialWidth) / 2;
+    const offsetY = (finalHeight - initialHeight) / 2;
+    
+    // Définir la position initiale centrée
+    gsap.set(cardRef.current, {
+      x: -offsetX,
+      y: -offsetY,
+      width: initialWidth,
+      height: initialHeight
+    });
 
     const tl = gsap.timeline();
 
@@ -272,9 +287,10 @@ const MaterialCard: React.FC<MaterialCardProps> = ({
     // Redimensionner la carte
     .to(cardRef.current, {
       duration: 0.5,
-      width: "100vw",
-      height: "100vh",
-      transformOrigin: "center center",
+      width: finalWidth,
+      height: finalHeight,
+      x: 0,
+      y: 0,
       ease: "back.out(1.7)"
     }, 0.2)
     // Afficher la vue détaillée
@@ -295,8 +311,14 @@ const MaterialCard: React.FC<MaterialCardProps> = ({
   const foldCard = () => {
     if (!cardRef.current || !detailsRef.current || !summaryRef.current) return;
 
-    // Maintenir l'origine de transformation au centre
-    cardRef.current.style.transformOrigin = 'center center';
+    // Calculer les dimensions et décalages
+    const initialWidth = 512;
+    const initialHeight = 288;
+    const finalWidth = window.innerWidth;
+    const finalHeight = window.innerHeight;
+    
+    const offsetX = (finalWidth - initialWidth) / 2;
+    const offsetY = (finalHeight - initialHeight) / 2;
 
     const tl = gsap.timeline();
 
@@ -311,9 +333,10 @@ const MaterialCard: React.FC<MaterialCardProps> = ({
     // Redimensionner la carte
     .to(cardRef.current, {
       duration: 0.4,
-      width: "512px",
-      height: "288px",
-      transformOrigin: "center center",
+      width: initialWidth,
+      height: initialHeight,
+      x: -offsetX,
+      y: -offsetY,
       ease: "power2.inOut"
     }, 0.2)
     // Afficher la vue résumé
